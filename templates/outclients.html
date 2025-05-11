@@ -1,0 +1,490 @@
+{% load static %}
+{% static "images" as baseurl %}
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <title>OutClients Page</title>
+        <link rel="stylesheet" href="{% static './css/clients.css' %}">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <style>
+            .search-box {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end; /* Aligns content to the right */
+                margin-bottom: 20px;
+            }
+            
+            .search-box input {
+                padding: 10px;
+                border: 1px solid #e1dfdf;
+                border-radius: 5px;
+                margin-right: -90px;
+                padding-left:20px;
+                padding-right:160px;
+                background-color: #e7e4e4;
+            }
+            
+            .new-btn {
+                background-color: #333;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+            }
+            
+            .button-icon {
+                margin-right: 5px;
+                width: 16px;
+                height: 16px;
+            }
+            
+            .options-icon {
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+                    /* Modal Styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.4);
+            }
+            
+            .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 400px;
+                border-radius: 10px;
+            }
+            .modal-content h3 {
+             text-align: center;
+             font-size: 20px; /* Adjust as needed */
+             margin-bottom: 20px; 
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+            
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            
+            .modal-content form {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .modal-content form label {
+                margin-top: 10px;
+            }
+            
+            .modal-content form input,
+            .modal-content form button {
+                padding: 10px;
+                margin-top: 5px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+            
+            .form-actions {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 20px;
+            }
+            
+            .form-actions button {
+                margin-left: 10px;
+            }
+            
+            form button[type="submit"],
+              form button[type="button"] {
+                flex: 1;
+             padding: 10px;
+             border: none;
+             border-radius: 5px;
+             cursor: pointer;
+             margin: 0 5px; 
+              }
+              
+            form button[type="submit"] {
+                background-color: black;
+                color: white;
+            }
+            
+            form button[type="button"] {
+                background-color: #ccc;
+            }
+            
+        </style>
+
+
+    </head>
+    <body>
+
+        <div class="container">
+            <aside class="sidebar">
+                <div class="logo">
+                    <img src="{% static './images/logowhite.png' %}" alt="logo" width="50" height="50">
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'dashboard' %}"><img src="{% static './images/dashboard.png' %}" alt="dashboard icon" class="menu-icon">Dashboard</a></li>
+                        <li><a href="{% url 'projects' %}"><img src="{% static './images/Project.png' %}" class="menu-icon">Project</a></li>
+                        <li><a href="{% url 'incomef_view' %}"><img src="{% static './images/Income.png' %}" alt="Income Icon" class="menu-icon">Income</a></li>
+                        <li><a href="{% url 'expense' %}"><img src="{% static './images/expenses.png' %}" alt="Expenses Icon" class="menu-icon">Expense</a></li>
+                        <li><a href="{% url 'calendar_view' %}"><img src="{% static './images/calendar.png' %}" alt="Calendar Icon" class="menu-icon">Calendar</a></li>
+                        <li><a href="{% url 'allproject' %}"><img src="{% static './images/All projects.png' %}" alt="All Projects Icon" class="menu-icon">All Projects</a></li>
+                        <li><a href="{% url 'clientsbook' %}"><img src="{% static './images/Client books.png' %}" alt="Clients Book Icon" class="menu-icon">Clients Book</a></li>
+                        <li><a href="{% url 'clients' %}"><img src="{% static './images/Clients.png' %}" alt="Clients Icon" class="menu-icon">Clients</a></li>
+                        <li><a href="{% url 'status' %}"><img src="{% static './images/Status.png' %}" alt="Status Icon" class="menu-icon">Status</a></li>
+                        <li><a href="{% url 'pending_pay' %}"><img src="{% static './images/pending.png' %}" alt="Pending Payments Icon" class="menu-icon">Pending Payments</a></li>
+                        <li><a href="{% url 'project_map' %}"><img src="{% static './images/maps-and-flags.png' %}" alt="Map Icon" class="menu-icon">Map</a></li>
+                        <li><a href="{% url 'assets' %}"><img src="{% static './images/Assets.png' %}" alt="Assets Icon" class="menu-icon">Assets</a></li>
+                        <li><a href="{% url 'budget' %}"><img src="{% static './images/budget.png' %}" alt="Budget Icon" class="menu-icon">Budget</a></li>
+                        <li><a href="{% url 'entertainment' %}"><img src="{% static './images/Entertainment.png' %}" src= alt="Entertainment Icon" class="menu-icon">Entertainment</a></li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="main-content">
+                <div class="search-box">
+       
+    <!-- search box -->
+    <form method="get" action="{% url 'outclients' %}">
+        {% csrf_token %}
+        <input type="text" name="q" placeholder="search..." value="{{ query }}">
+
+    </form>
+
+    <button class="new-btn" onclick="openNewClientForm()"><img src="C:/Users/Riktha/New folder/plus.png" alt="New Icon" class="button-icon">New</button>
+            </div>
+            <h2>Outsourcing Clients</h2>
+
+            <table class="clients-table">
+                <tr>
+                    <th>Client</th>
+                    <th>Company</th>
+                    <th>Phone Number</th>
+
+                    <th>Actions</th>
+                </tr>
+                {% for item in objso %}
+
+                <tr  onclick="moveToDpage('{{ item.name }}')" style="cursor: pointer;">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.company }}</td>
+                    <td>{{ item.number }}</td>
+
+                    <td>
+                        <img src="C:/Users/Riktha/Downloads/option (1).png" alt="Options" class="options-icon" data-id="{{ item.id }}" onclick="openEditClientForm()">
+                        <div class="client-actions">
+                            <button class="call-btn"><img src="C:/Users/Riktha/Downloads/call.png" alt="Call Icon" class="button-icon">Call</button>
+                            <button class="share-btn"><img src="C:/Users/Riktha/Downloads/share.png" alt="Share Icon" class="button-icon">Share</button>
+                        </div>
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+            </table><br>
+
+            
+
+
+
+        </main>
+    </div>
+    
+    <!-- Modal for New Client Form -->
+    <div id="newClientModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeNewClientForm()">&times;</span>
+            <h2>New Client</h2>
+            <form id="newClientForm" method="post" action="{% url 'outclients' %}">
+                {% csrf_token %}
+                <label for="newName">Name</label>
+                <input type="text" id="newName" name="newName" required>
+
+                <label for="newCompany">Company</label>
+                <input type="text" id="newCompany" name="newCompany" required>
+
+                <label for="newEmail">Email</label>
+                <input type="email" id="newEmail" name="newEmail" required>
+
+                <label for="newNumber">Phone Number</label>
+                <input type="text" id="newNumber" name="newNumber">
+
+                <label for="newImage">Image</label>
+                <input type="file" id="newImage" name="newImage">
+
+                <div class="form-actions">
+                    <button type="submit" id="addoutBtn">Add Client</button>
+                    <button type="button" onclick="closeNewClientForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Edit Client Form -->
+    <div id="editClientModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditClientForm()">&times;</span>
+            <h2>Edit Client</h2>
+            <form id="editClientForm">
+                <label for="editName">Name</label>
+                <input type="text" id="editName" name="editName" required>
+
+                <label for="editCompany">Company</label>
+                <input type="text" id="editCompany" name="editCompany" required>
+
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail" name="editEmail" required>
+
+                <label for="editNumber">Phone Number</label>
+                <input type="text" id="editNumber" name="editNumber">
+
+                <label for="editImage">Image</label>
+                <input type="file" id="editImage" name="editImage">
+                <p id="image-file-name"></p> <!-- This will show the previously uploaded or newly selected file name -->
+
+                
+
+                <div class="form-actions">
+                    <button type="submit">Submit</button>
+                    <button type="button" id ="cancelBtn" onclick="closeEditClientForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script>
+        function openNewClientForm() {
+            document.getElementById('newClientModal').style.display = 'block';
+        }
+
+       
+
+        function closeNewClientForm() {
+            document.getElementById('newClientModal').style.display = 'none';
+        }
+
+
+        function openEditClientForm() {
+            document.getElementById('editClientModal').style.display = 'block';
+        }
+
+        function closeEditClientForm() {
+            document.getElementById('editClientModal').style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('newClientModal')) {
+                closeNewClientForm();
+            }
+            if (event.target == document.getElementById('editClientModal')) {
+                closeEditClientForm();
+            }
+        }
+
+        
+    </script>
+
+    <script>// add form
+
+        document.getElementById('addoutBtn').addEventListener('submit', function(event) { 
+            event.preventDefault();
+        
+            var form = this;
+            var formData = new FormData(form);
+        
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    form.reset();
+                    closeNewClientForm();
+                    location.reload();
+                } else {
+                    var errorMessage = document.getElementById("error-message");
+                    errorMessage.textContent = data.error;
+                    errorMessage.style.display = "block";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("error-message").textContent = 'An error occurred: ' + error.message;
+                document.getElementById("error-message").style.display = "block";
+            });
+        });
+        
+        
+    </script>
+    
+
+    
+    
+        
+    <script>// edit form
+
+        $(document).ready(function() {
+            var modal = $('#editClientModal');
+            var span = $('.close');
+            var cancelBtn = $('#cancelBtn');
+        
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    }
+                }
+            });
+        
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        
+            // Close the modal
+            span.on('click', function() {
+                modal.hide();
+            });
+        
+            cancelBtn.on('click', function() {
+                modal.hide();
+            });
+    
+        
+            function openModal(oclt_id) {
+                if (oclt_id) {
+                    $.ajax({
+                        url: '/get_outclient_data/' + oclt_id + '/',
+                        method: 'GET',
+                        success: function(data) {
+                            $('#editClientForm').attr('data-edit-id', oclt_id); // Set the edit code
+                            $('#editName').val(data.name);
+                            $('#editCompany').val(data.company);                                             ////////////// edittype - id, data.type -> type views getting variable name
+                            $('#editEmail').val(data.email);
+                            $('#editNumber').val(data.number);  // Corrected to match field name
+                            
+                            // Display the previously uploaded file name
+                            if (data.image) {
+                                $('#image-file-name').text("Previously uploaded file: " + data.image.split('/').pop());
+                            } else {
+                                $('#image-file-name').text("No file uploaded.");
+                            }
+
+                            modal.show();
+                        },
+                        error: function() {
+                            alert('Failed to fetch data. Please try again.');
+                        }
+                    });
+                } else {
+                    $('#editClientForm').removeAttr('data-edit-id'); // Clear the edit code for new projects
+                    modal.show();
+                }
+            }
+        
+            // Attach click event to edit buttons
+            $('.options-icon').on('click', function(event) {
+                event.preventDefault(); // Prevent default link behavior
+                event.stopPropagation();
+
+                var id = $(this).data('id'); // Get the project code from the button
+                openModal(id);
+            });
+        
+            $('#editClientForm').on('submit', function(event) {
+                event.preventDefault();
+                var id = $('#editClientForm').attr('data-edit-id'); // Get the edit code
+                var url = '/edit_outclient/' + (id ? id + '/' : ''); // Ensure URL includes code if available
+                
+                // Create FormData object
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,  // Prevent jQuery from automatically transforming the data into a query string
+                    contentType: false,  // Let the browser set the content type automatically (needed for file uploads)
+    
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Form submitted successfully!');
+                            modal.hide();
+                            location.reload();  // Reload the page to reflect changes
+                         } else {
+                            alert('Failed to submit form: ' + response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+            });
+            // Show selected file name when a file is chosen
+            $('#newImage').on('change', function() {
+                var fileName = $(this).val().split('\\').pop();  // Get the file name only
+                $('#image-file-name').text("Selected file: " + fileName);
+            });
+        });
+        
+    </script>
+    
+    <script>
+        function moveToDpage(name){
+            window.location.href = "/outclientd/" + name + "/";
+        }
+    </script>
+    
+    </body>
+</html>
